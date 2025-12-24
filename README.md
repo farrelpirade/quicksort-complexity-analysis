@@ -6,7 +6,7 @@
 
 Proyek ini adalah aplikasi berbasis web yang dibangun untuk menganalisis dan memvisualisasikan **Kompleksitas Algoritma Quick Sort**. Aplikasi ini dikembangkan sebagai pemenuhan Tugas Besar mata kuliah **Analisis Kompleksitas Algoritma (AKA)**.
 
-[cite_start]Tujuan utama dari proyek ini adalah untuk membandingkan efisiensi algoritma dalam berbagai skenario (Best Case, Average Case, dan Worst Case) serta menganalisis _running time_ berdasarkan ukuran input yang berbeda[cite: 11, 20].
+Tujuan utama dari proyek ini adalah untuk membandingkan efisiensi algoritma dalam berbagai skenario (Best Case, Average Case, dan Worst Case) serta menganalisis _running time_ berdasarkan ukuran input yang berbeda.
 
 ### Fitur Utama
 

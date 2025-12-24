@@ -12,8 +12,8 @@ Proyek ini adalah aplikasi berbasis web yang dibangun untuk menganalisis dan mem
 
 - **Visualisasi Sorting:** Melihat bagaimana Quick Sort bekerja secara visual.
 - **Analisis Running Time:** Mengukur waktu eksekusi algoritma dalam satuan milidetik/nanodetik.
-- [cite_start]**Variasi Input:** Pengujian dengan berbagai ukuran input[cite: 20].
-- [cite_start]**Grafik Performa:** Visualisasi grafik perbandingan waktu eksekusi[cite: 20].
+- **Variasi Input:** Pengujian dengan berbagai ukuran input.
+- **Grafik Performa:** Visualisasi grafik perbandingan waktu eksekusi.
 
 ## Anggota Kelompok
 
@@ -25,7 +25,7 @@ Proyek ini adalah aplikasi berbasis web yang dibangun untuk menganalisis dan mem
 
 ## Tech Stack
 
-- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Framework:** Next.js
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
 
@@ -35,9 +35,8 @@ Berdasarkan studi kasus yang dipilih, proyek ini menganalisis:
 
 1.  **Kompleksitas Waktu Asimtotik:** Menghitung Big-O notation untuk algoritma Quick Sort.
 2.  **Perbandingan Skenario:**
-    - **Best Case ($O(n \log n)$):** Ketika pivot membagi array secara seimbang.
+    - **Best Case ($O(n log n)$):** Ketika pivot membagi array secara seimbang.
     - **Worst Case ($O(n^2)$):** Ketika array sudah terurut (ascending/descending) dan pivot yang dipilih adalah elemen ekstrem.
-3.  [cite_start]**Iteratif vs Rekursif:** Implementasi dan perbandingan efisiensi memori (Stack overflow risk pada rekursi dalam)[cite: 17].
 
 ## Cara Menjalankan Project
 

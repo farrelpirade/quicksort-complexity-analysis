@@ -9,6 +9,7 @@ import { Slider } from "@/components/ui/slider"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Play, Pause, RotateCcw } from "lucide-react"
 import { quickSortRecursiveAnimated, quickSortIterativeAnimated, type SortStep } from "@/lib/quick-sort"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
 
 export default function AnimationMode() {
   const [array, setArray] = useState<number[]>([64, 34, 25, 12, 22, 11, 90])
@@ -21,6 +22,8 @@ export default function AnimationMode() {
   const [displayArray, setDisplayArray] = useState<number[]>([])
   const [colors, setColors] = useState<string[]>([])
   const [stackInfo, setStackInfo] = useState<string[]>([])
+  const [activeRecursion, setActiveRecursion] = useState<{ left: number; right: number; depth: number; side: string }[]>([])
+  const [history, setHistory] = useState<{ n: number; ops: number; type: string }[]>([])
   const animationRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
@@ -35,6 +38,7 @@ export default function AnimationMode() {
         setDisplayArray([...step.array])
         setColors([...step.colors])
         setStackInfo([...step.stackInfo])
+        setActiveRecursion(step.activeRecursion || [])
         setCurrentStep(currentStep + 1)
       }, 1000 - speed)
     } else if (currentStep >= steps.length && isPlaying) {
@@ -72,6 +76,9 @@ export default function AnimationMode() {
         sortMode === "recursive" ? quickSortRecursiveAnimated([...array]) : quickSortIterativeAnimated([...array])
       setSteps(sortSteps)
       setCurrentStep(0)
+
+      // Add to history
+      setHistory(prev => [...prev, { n: array.length, ops: sortSteps.length, type: sortMode }].sort((a, b) => a.n - b.n))
     }
     setIsPlaying(true)
   }
@@ -87,6 +94,7 @@ export default function AnimationMode() {
     setDisplayArray([...array])
     setColors(new Array(array.length).fill("bg-blue-500"))
     setStackInfo([])
+    setActiveRecursion([])
   }
 
   const maxValue = Math.max(...displayArray, 1)
@@ -193,7 +201,7 @@ export default function AnimationMode() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Visualisasi</CardTitle>
+          <CardTitle>Visualisasi Utama</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-end justify-center gap-1 h-64 bg-muted/20 rounded-lg p-4">
@@ -213,6 +221,48 @@ export default function AnimationMode() {
         </CardContent>
       </Card>
 
+      {activeRecursion.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Visualisasi Sub-Rekursi (Max 5)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {activeRecursion.slice(0, 5).map((rec, idx) => (
+                <div key={idx} className="border p-4 rounded-lg space-y-2">
+                  <div className="flex justify-between items-center">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm">Depth {rec.depth}</span>
+                      <span className={`text-xs font-bold ${rec.side === 'Left' ? 'text-blue-600' : rec.side === 'Right' ? 'text-orange-600' : 'text-gray-600'}`}>
+                        {rec.side === 'Root' ? 'Root' : `${rec.side} Partition`}
+                      </span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">Range: [{rec.left}, {rec.right}]</span>
+                  </div>
+                  <div className="flex items-end justify-center gap-0.5 h-32 bg-muted/20 rounded p-2">
+                    {displayArray.slice(rec.left, rec.right + 1).map((value, subIdx) => {
+                      const originalIndex = rec.left + subIdx;
+                      return (
+                        <div
+                          key={subIdx}
+                          className="flex-1 flex flex-col items-center justify-end gap-0.5"
+                        >
+                          <span className="text-[10px] font-mono">{value}</span>
+                          <div
+                            className={`w-full ${colors[originalIndex]} transition-all duration-300 rounded-t`}
+                            style={{ height: `${(value / maxValue) * 100}px` }}
+                          />
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {stackInfo.length > 0 && (
         <Card>
           <CardHeader>
@@ -225,6 +275,27 @@ export default function AnimationMode() {
                   {info}
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {history.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Grafik Operasi per Ukuran Input</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={history}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="n" label={{ value: 'Ukuran Input (N)', position: 'insideBottom', offset: -5 }} />
+                  <YAxis label={{ value: 'Langkah Operasi', angle: -90, position: 'insideLeft' }} />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="ops" stroke="#8884d8" strokeWidth={2} name="Operasi" />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
